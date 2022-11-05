@@ -62,9 +62,11 @@ class Arkadia_scrapper:
         df = df.copy()
         df.drop_duplicates(subset='room_number', inplace=True)
         df['price_floor'] = df.price_range.apply(
-            lambda x: int(x.split('-')[0].replace(',', '').strip('$')) if (x is not None and not pd.isnull(x)) else None)
+            lambda x: int(x.split('-')[0].replace(',', '').strip('$')) if (
+                    x is not None and not pd.isnull(x)) else None)
         df['price_ceil'] = df.price_range.apply(
-            lambda x: int(x.split('-')[1].replace(',', '').strip('$')) if (x is not None and not pd.isnull(x)) else None)
+            lambda x: int(x.split('-')[1].replace(',', '').strip('$')) if (
+                    x is not None and not pd.isnull(x)) else None)
         df['Floor_Plan'] = df.floor_plan.apply(lambda x: x.split(':')[1].split(' - ')[0])
         df['num_bedroom'] = df.floor_plan.apply(
             lambda x: x.split(':')[1].split(' - ')[1].split(',')[0].split(' ')[0])
@@ -86,6 +88,7 @@ class Arkadia_scrapper:
 def create_url(user, password, host, database, port):
     return f"mysql://{user}:{password}@{host}:{port}/{database}"
 
+
 def push_newest_data():
     config = {'user': "root",
               'password': "rootroot",
@@ -98,9 +101,27 @@ def push_newest_data():
     pool = create_engine(url=create_url(**config),
                          pool_size=20, max_overflow=0,
                          )
+    _update_meta(df, pool, 'Arkadia')
+    df = df[['room_number', 'apartment', 'date_update', 'price_floor', 'price_ceil']]
     with pool.connect() as conn:
-        df.to_sql('prices', conn, if_exists='append')
+        df.to_sql('prices', conn, if_exists='append', index=False)
+        pass
     df.to_csv('sample_arkadia.csv')
+
+
+def _update_meta(df, pool, apartment='Arkadia'):
+    df_meta = pd.read_sql("select * from room_meta where apartment = '{}';".format(apartment), pool)
+    existing_metas = df_meta.room_number.to_list()
+    out_dfs = []
+    for room_number, df_group in df.groupby('room_number'):
+        if room_number not in existing_metas:
+            out_dfs.append(df_group[['room_number', 'apartment', 'Avaliable_date', 'Sq.Ft', 'Floor_Plan', 'num_bedroom',
+                                     'num_bathroom']])
+    if len(out_dfs) > 0:
+        with pool.connect() as conn:
+            pd.concat(out_dfs).to_sql('room_meta', conn, if_exists='append', index=False)
+        print(len(out_dfs), 'new rooms entered the market')
+
 
 if __name__ == '__main__':
     push_newest_data()
