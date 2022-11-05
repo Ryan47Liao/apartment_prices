@@ -1,14 +1,10 @@
 from bs4 import BeautifulSoup
 import requests
 import re
-import json
 import tqdm
 import datetime
-from functools import reduce
 import pandas as pd
-import numpy as np
 from sqlalchemy import create_engine
-
 
 class Arkadia_scrapper:
     def __init__(self):
