@@ -76,6 +76,7 @@ class Arkadia_scrapper:
         if 'date_update' not in df.columns:
             df['date_update'] = pd.to_datetime(str(datetime.datetime.now()).split('.')[0])
         df['apartment'] = 'Arkadia'
+        df['Avaliable_date'] = pd.to_datetime(df.Avaliable_date)
         return df.reset_index(drop=True)
 
     def main(self):
@@ -110,8 +111,11 @@ def push_newest_data():
 
 
 def _update_meta(df, pool, apartment='Arkadia'):
-    df_meta = pd.read_sql("select * from room_meta where apartment = '{}';".format(apartment), pool)
-    existing_metas = df_meta.room_number.to_list()
+    try:
+        df_meta = pd.read_sql("select * from room_meta where apartment = '{}';".format(apartment), pool)
+        existing_metas = df_meta.room_number.to_list()
+    except:
+        existing_metas = []
     out_dfs = []
     for room_number, df_group in df.groupby('room_number'):
         if room_number not in existing_metas:
