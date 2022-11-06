@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup
 import requests
 import re
 import tqdm
+import pytz
 import datetime
 import pandas as pd
 from sqlalchemy import create_engine
@@ -77,7 +78,9 @@ class Arkadia_scrapper:
             lambda x: x.split(':')[1].split(' - ')[1].split(',')[1].split(' ')[1])
         df.drop(columns=['price_range', 'floor_plan'], inplace=True)
         if 'date_update' not in df.columns:
-            df['date_update'] = pd.to_datetime(str(datetime.datetime.now()).split('.')[0])
+            current_time = datetime.datetime.now(pytz.timezone('US/Central'))
+            print("Updated {} rows at {}".format(df.shape[0],current_time))
+            df['date_update'] = pd.to_datetime(str(current_time).split('.')[0])
         df['apartment'] = 'Arkadia'
         df['Avaliable_date'] = pd.to_datetime(df.Avaliable_date)
         return df.reset_index(drop=True)
