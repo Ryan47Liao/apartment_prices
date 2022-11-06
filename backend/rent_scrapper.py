@@ -2,6 +2,9 @@ import sys
 
 sys.path.append("./..")
 
+import pymysql
+pymysql.install_as_MySQLdb()
+
 from bs4 import BeautifulSoup
 import requests
 import re

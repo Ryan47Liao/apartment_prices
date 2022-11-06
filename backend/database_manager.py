@@ -8,7 +8,7 @@ class DataBaseManager:
             'user': "admin",
             'password': "a19990721",
             'host': "capstone.cfykpx21wk0f.us-east-2.rds.amazonaws.com",
-            'database': "Features",
+            'database': "apartments",
             'port': '3306'}
         self.config = config
         self.pool = create_engine(url=DataBaseManager.create_url(**self.config),
@@ -39,16 +39,7 @@ class DataBaseManager:
         return df
 
     def push_newest_data(self,df):
-        config = {
-                'user': "admin",
-                'password': "a19990721",
-                'host': "capstone.cfykpx21wk0f.us-east-2.rds.amazonaws.com",
-                'database': "Features",
-                'port': '3306'}
-
-        # scarpper_west_arkadia = Arkadia_scrapper()
-        # df = scarpper_west_arkadia.main()
-        pool = create_engine(url=DataBaseManager.create_url(**config),
+        pool = create_engine(url=DataBaseManager.create_url(**self.config),
                              pool_size=20, max_overflow=0,
                              )
         self._update_meta(df, pool, 'Arkadia')
@@ -56,7 +47,6 @@ class DataBaseManager:
         with pool.connect() as conn:
             df.to_sql('prices', conn, if_exists='append', index=False)
             pass
-
 
     def _update_meta(self,df, pool, apartment='Arkadia'):
         try:
