@@ -1,3 +1,6 @@
+import pymysql
+pymysql.install_as_MySQLdb()
+
 from sqlalchemy import create_engine
 import pandas as pd
 
