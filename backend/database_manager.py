@@ -1,3 +1,7 @@
+import sys
+
+sys.path.append("./..")
+
 import pymysql
 pymysql.install_as_MySQLdb()
 
@@ -5,7 +9,7 @@ from sqlalchemy import create_engine
 import pandas as pd
 
 class DataBaseManager:
-    def __init__(self, config=None):
+    def __init__(self, config=None,local=True):
         if config is None:
             config = {
             'user': "admin",
@@ -14,9 +18,12 @@ class DataBaseManager:
             'database': "apartments",
             'port': '3306'}
         self.config = config
-        self.pool = create_engine(url=DataBaseManager.create_url(**self.config),
-                                  pool_size=20, max_overflow=0
-                                  )
+        if local:
+            self.pool  = create_engine('sqlite:///../database/apartments.db', echo=True)
+        else:
+            self.pool = create_engine(url=DataBaseManager.create_url(**self.config),
+                                      pool_size=20, max_overflow=0
+                                      )
 
     @staticmethod
     def create_url(user, password, host, database, port):
@@ -35,8 +42,8 @@ class DataBaseManager:
         Floor_Plan ,
         num_bedroom ,
         num_bathroom
-        FROM apartments.prices p
-        	LEFT JOIN apartments.room_meta m
+        FROM prices p
+        	LEFT JOIN room_meta m
         		ON p.apartment = m.apartment AND p.room_number = m.room_number;"""
             df = pd.read_sql(sql, conn)
         return df
