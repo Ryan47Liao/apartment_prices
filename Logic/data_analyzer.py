@@ -1,10 +1,10 @@
 from backend.database_manager import DataBaseManager
 import matplotlib.pyplot as plt
 import pandas as pd
-
+import numpy as np
 
 class DataAnalyzer:
-    def __init__(self, config=None, local=False):
+    def __init__(self, config=None, local=True):
         self.db = DataBaseManager(config=config,local=local)
         self.data_raw = self.db.get_all_data()
 
@@ -13,6 +13,10 @@ class DataAnalyzer:
 
     def process_data(self):
         df = self.data_raw.copy()
+        # Change dtypes
+        df.num_bedroom = df.num_bedroom.apply(lambda x:int(x) if not np.isnan(x) else None)
+        df.num_bathroom = df.num_bedroom.apply(lambda x: int(x) if not np.isnan(x) else None)
+        #
         df = df.merge(df.groupby(['Sq.Ft', 'date_update']).price_floor.mean().reset_index().rename(
             {'price_floor': 'price_mean_horizontal'}, axis=1),
             on=['Sq.Ft', 'date_update'])
