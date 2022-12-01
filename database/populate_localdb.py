@@ -9,9 +9,9 @@ import sqlite3
 
 da = DataAnalyzer()
 with da.db.pool.connect() as conn:
-    sql = 'SELECT * FROM apartments.room_meta'
+    sql = 'SELECT * FROM apartments.room_meta_old'
     df_meta = pd.read_sql(sql, conn)
-    df_price = pd.read_sql('SELECT * FROM apartments.prices', conn)
+    df_price = pd.read_sql('SELECT * FROM apartments.prices_old', conn)
     with sqlite3.connect("apartments.db") as conn1:
         df_meta.to_sql('room_meta', conn1, if_exists='append')
         print(pd.read_sql('SELECT * FROM room_meta', conn1).shape)
