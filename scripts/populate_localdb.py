@@ -1,8 +1,9 @@
-from sqlalchemy import create_engine
-from backend.rent_scrapper import Arkadia_scrapper
+import sys
+
+sys.path.append("./..")
+
 import pandas as pd
 from Logic.data_analyzer import DataAnalyzer
-import datetime
 # Localize
 import sqlite3
 
