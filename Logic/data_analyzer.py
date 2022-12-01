@@ -4,8 +4,8 @@ import pandas as pd
 
 
 class DataAnalyzer:
-    def __init__(self, config=None):
-        self.db = DataBaseManager(config=config)
+    def __init__(self, config=None, local=False):
+        self.db = DataBaseManager(config=config,local=local)
         self.data_raw = self.db.get_all_data()
 
     def fetch_new_data(self):
