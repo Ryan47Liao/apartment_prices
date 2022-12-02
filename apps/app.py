@@ -12,9 +12,8 @@ st.set_page_config(page_title='Apartment Watcher', page_icon=':house:', layout='
 
 # --header
 with st.container():
-    st.subheader('See the trend of apartment prices!')
     st.title('Semi real time apartment price historical data')
-    st.write('some contents')
+    st.subheader('See the trend of apartment prices!')
 
 # -- Details
 def show_latest_images():
