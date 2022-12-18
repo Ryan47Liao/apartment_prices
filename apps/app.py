@@ -11,7 +11,8 @@ da = DataAnalyzer()
 st.set_page_config(page_title='Apartment Watcher', page_icon=':house:', layout='wide')
 
 # --header
-with st.container():
+with st.container()
+
     st.title('Semi real time apartment price historical data')
     st.subheader('See the trend of apartment prices!')
 
@@ -19,8 +20,7 @@ with st.container():
 def show_latest_images():
     da.fetch_new_data()
     df = da.process_data()
-    df_plot = df.query('num_bedroom == 1 and num_bathroom == 1 and price_floor < 2600 and `Sq.Ft` <'
-                       '= 799')
+    df_plot = df.query('price_floor < 2300 and `Sq.Ft` <= 799')
     ###
     figs = [da.show_history(df_plot, 'ALL')]
     for Floor_Plan, df_floor_group in df_plot.groupby(['Floor_Plan', 'Sq.Ft']):
