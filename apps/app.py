@@ -19,8 +19,7 @@ with st.container():
 def show_latest_images():
     da.fetch_new_data()
     df = da.process_data()
-    df_plot = df.query('num_bedroom == 1 and num_bathroom == 1 and price_floor < 2600 and `Sq.Ft` <'
-                       '= 799')
+    df_plot = df.query('price_floor < 2300')
     ###
     figs = [da.show_history(df_plot, 'ALL')]
     for Floor_Plan, df_floor_group in df_plot.groupby(['Floor_Plan', 'Sq.Ft']):
