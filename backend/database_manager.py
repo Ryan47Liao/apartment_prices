@@ -50,12 +50,9 @@ class DataBaseManager:
         return df
 
     def push_newest_data(self, df):
-        pool = create_engine(url=DataBaseManager.create_url(**self.config),
-                             pool_size=20, max_overflow=0,
-                             )
-        self._update_meta(df, pool, 'Arkadia')
+        self._update_meta(df, self.pool, 'Arkadia')
         df = df[['room_number', 'apartment', 'date_update', 'price_floor', 'price_ceil']]
-        with pool.connect() as conn:
+        with self.pool.connect() as conn:
             df.to_sql('prices', conn, if_exists='append', index=False)
             pass
 
