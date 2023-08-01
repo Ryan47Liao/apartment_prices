@@ -92,32 +92,6 @@ class Arkadia_scrapper:
         return df_final
 
 
-    # pool = create_engine(url=create_url(**config),
-    #                      pool_size=20, max_overflow=0,
-    #                      )
-    # _update_meta(df, pool, 'Arkadia')
-    # df = df[['room_number', 'apartment', 'date_update', 'price_floor', 'price_ceil']]
-    # with pool.connect() as conn:
-    #     df.to_sql('prices', conn, if_exists='append', index=False)
-    #     pass
-
-
-# def _update_meta(df, pool, apartment='Arkadia'):
-#     try:
-#         df_meta = pd.read_sql("select * from room_meta where apartment = '{}';".format(apartment), pool)
-#         existing_metas = df_meta.room_number.to_list()
-#     except:
-#         existing_metas = []
-#     out_dfs = []
-#     for room_number, df_group in df.groupby('room_number'):
-#         if room_number not in existing_metas:
-#             out_dfs.append(df_group[['room_number', 'apartment', 'Avaliable_date', 'Sq.Ft', 'Floor_Plan', 'num_bedroom',
-#                                      'num_bathroom']])
-#     if len(out_dfs) > 0:
-#         with pool.connect() as conn:
-#             pd.concat(out_dfs).to_sql('room_meta', conn, if_exists='append', index=False)
-#         print(len(out_dfs), 'new rooms entered the market')
-
 
 if __name__ == '__main__':
     import time

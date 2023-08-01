@@ -1,3 +1,7 @@
+import sys
+
+sys.path.append("./..")
+
 from backend.database_manager import DataBaseManager
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -14,8 +18,8 @@ class DataAnalyzer:
     def process_data(self):
         df = self.data_raw.copy()
         # Change dtypes
-        df.num_bedroom = df.num_bedroom.apply(lambda x:int(x) if not np.isnan(x) else None)
-        df.num_bathroom = df.num_bedroom.apply(lambda x: int(x) if not np.isnan(x) else None)
+        df.num_bedroom = df.num_bedroom.apply(lambda x:int(x) if x is not None and pd.notna(x) else None)
+        df.num_bathroom = df.num_bedroom.apply(lambda x: int(x) if x is not None and pd.notna(x) else None)
         #
         df = df.merge(df.groupby(['Sq.Ft', 'date_update']).price_floor.mean().reset_index().rename(
             {'price_floor': 'price_mean_horizontal'}, axis=1),
