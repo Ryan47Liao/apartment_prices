@@ -3,13 +3,13 @@ services:
   data_collector:
     build: .
     volumes:
-      - $DB_PATH:/app/database/apartments.db
-    command: python scripts/update_database.py
+      - /home/rliao/KingKong:/app/database
+    command: python scripts/count_rows.py
 
   streamlit:
     build: .
     volumes:
-      - $DB_PATH:/app/database/apartments.db
+      - /home/rliao/KingKong:/app/database
     command: streamlit run apps/app.py
     ports:
-      - 8503:8501
+      - 8501:8501

@@ -17,7 +17,9 @@ from sqlite3 import Error
 
 class DataBaseManager:
     def __init__(self, config=None, local=True,
-                 path_database = '../database/apartments.db'):
+                 path_database='database/apartments.db',
+                 echo=False):
+        print('Working Dir:', os. getcwd())
         if config is None:
             config = {
                 'user': "admin",
@@ -32,14 +34,15 @@ class DataBaseManager:
             # Convert the tilde in the file path to the actual home directory
             db_file = os.path.expanduser(path_database)
             # Create the engine
-            self.pool = create_engine('sqlite:///' + db_file, echo=True)
+            self.pool = create_engine('sqlite:///' + db_file, echo=echo)
         else:
             self.pool = create_engine(url=DataBaseManager.create_url(**self.config),
-                                      pool_size=20, max_overflow=0
+                                      pool_size=20, max_overflow=0,
+                                      echo=echo
                                       )
-            
+
     @staticmethod
-    def db_init(path_database:str):
+    def db_init(path_database: str):
         # Convert the tilde in the file path to the actual home directory
         db_file = os.path.expanduser(path_database)
         # Check if the directory exists, and if not, create it
@@ -63,6 +66,20 @@ class DataBaseManager:
     @staticmethod
     def create_url(user, password, host, database, port):
         return f"mysql://{user}:{password}@{host}:{port}/{database}"
+
+    def count_rows(self, tables=['prices', 'room_meta']):
+        with self.pool.connect() as conn:
+            for table in tables:
+                print(table,':')
+                try:
+                    sql = """
+                        SELECT COUNT(1) 
+                        FROM {}
+                    """.format(table)
+                    df = pd.read_sql(sql, conn)
+                    print('Table rows:', df)
+                except Exception:
+                    print('Table DNE')
 
     def get_all_data(self):
         with self.pool.connect() as conn:
@@ -109,5 +126,4 @@ class DataBaseManager:
 
 if __name__ == '__main__':
     db = DataBaseManager(local=True)
-    print(db.get_all_data())
-    
+    db.count_rows()
