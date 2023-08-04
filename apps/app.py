@@ -40,7 +40,7 @@ FLOOR_PLANS = df['Floor_Plan'].unique().tolist()
 # Date constants
 TODAY = datetime.date.today()
 DEFAULT_START_DATE = TODAY - datetime.timedelta(days=30)
-DEFAULT_END_DATE = TODAY
+DEFAULT_END_DATE = TODAY + datetime.timedelta(days=1)
 
 # Functions
 def filter_dataframe(price_min, price_max, start_date, end_date, selected_floor_plans):
