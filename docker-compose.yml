@@ -4,7 +4,7 @@ services:
     build: .
     volumes:
       - /home/rliao/KingKong:/app/database
-    command: python scripts/count_rows.py
+    command: python scripts/update_database.py
 
   streamlit:
     build: .
