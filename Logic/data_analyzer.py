@@ -13,6 +13,7 @@ class DataAnalyzer:
         self.data_raw = self.db.get_all_data()
 
     def fetch_new_data(self):
+        print('Fetching New Data')
         self.data_raw = self.db.get_all_data()
 
     def process_data(self):
