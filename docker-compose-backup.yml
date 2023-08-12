@@ -1,15 +1,13 @@
 version: "3.9"
 services:
   data_collector:
-    #build: .
-    image: ryanratedr/kingkong-streamlit:v1.0
+    build: .
     volumes:
       - /home/ubuntu/KingKong:/app/database
     command: python scripts/update_database.py
 
   streamlit:
-    #build: .
-    image: ryanratedr/kingkong-streamlit:v1.0
+    build: .
     volumes:
       - /home/ubuntu/KingKong:/app/database
     command: streamlit run apps/app.py

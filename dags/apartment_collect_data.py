@@ -21,14 +21,14 @@ with DAG(
 
     t1 = DockerOperator(
         task_id='docker_data_collector',
-        image='apartment_prices-data_collector',
+        image='ryanratedr/kingkong-collectdata:v1.0',
         api_version='auto',
         auto_remove=True,
         command="python scripts/update_database.py",
         docker_url="unix://var/run/docker.sock",
         network_mode="bridge",
         mounts=[
-            Mount(source="/home/rliao/KingKong", target="/app/database", type="bind"),
+            Mount(source="/home/ubuntu/KingKong", target="/app/database", type="bind"),
         ]
     )
 
